@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             //get the values to save to database
             email = encodeUserEmail(inEmail.getText().toString());
             password = inPasswd.getText().toString();
-            String id = idGenerator();
+            String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             double balance = 0;
 
             //create new record in database
@@ -122,14 +122,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    public String idGenerator(){
-
-        Random number = new Random();
-        int id = number.nextInt(99999 - 10000) + 10000;
-        String idFinal = String.valueOf(id);
-
-        return idFinal;
-    }
-
 }

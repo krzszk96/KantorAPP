@@ -55,22 +55,17 @@ public class UserAccount extends AppCompatActivity {
     }
     private void userDataAccount() {
 
-        final String userEmailDec = firebaseUser.getEmail();
-        final String userEmailCod = encodeUserEmail(userEmailDec);
+        //final String userEmailDec = firebaseUser.getEmail();
+        //final String userEmailCod = encodeUserEmail(userEmailDec);
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        reference = FirebaseDatabase.getInstance().getReference("users");
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
                 reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //todo here create charge account mechanics, update database, show new value
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                Users user = snapshot.getValue(Users.class);
-                String show = Double.toString(user.getAccbalance());
-                userBalance.setText(show);
-                }
-                //String emailFromDB = dataSnapshot.child(userEnteredEmail).child("email").getValue(String.class);
-                //String accBalanceFromDB = dataSnapshot.child("accbalance").getValue().toString();
-                //userBalance.setText(accBalanceFromDB);
+                Users user = dataSnapshot.getValue(Users.class);
+                String curBalance = Double.toString(user.getAccbalance());
+                userBalance.setText(curBalance);
             }
 
             @Override
