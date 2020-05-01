@@ -5,7 +5,6 @@ public class Users {
     private String id;
     private String email, passwd;
     private double accbalance;
-    //private String username;
 
     public Users(){
 
@@ -13,7 +12,6 @@ public class Users {
 
     public Users(String id, String email, String passwd, double accbalance) {
         this.id = id;
-        //this.username = username;
         this.email = email;
         this.passwd = passwd;
         this.accbalance = accbalance;
@@ -22,9 +20,6 @@ public class Users {
     public String getId() {
         return id;
     }
-    /*public String getUsername() {
-        return username;
-    }*/
     public String getEmail() {
         return email;
     }
@@ -38,9 +33,6 @@ public class Users {
     public void setId(String id) {
         this.id = id;
     }
-    /*public void setUsername(String username) {
-        this.username = username;
-    }*/
     public void setEmail(String email) {
         this.email = email;
     }
