@@ -156,19 +156,95 @@
 
                 <EditText
                     android:id="@+id/chargeInput"
-                    android:layout_width="150dp"
+                    android:layout_width="200dp"
                     android:layout_height="40dp"
                     android:layout_margin="10dp"
                     android:paddingLeft="20dp"
-                    android:textSize="10dp"
+                    android:textSize="25dp"
                     android:ems="10"
                     android:textColor="#666666"
                     android:textColorHint="#666666"
                     android:background="@drawable/custom_edittext"
-                    android:hint="top up your account"
+                    android:hint="top up account"
                     android:inputType="text" />
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:paddingLeft="15dp"
+            android:background="@drawable/box_border"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/EurRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="EURrate"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/displayEUR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="0"
+                    android:textSize="25dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/DolRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="DOLrate"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/displayDOL"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="0"
+                    android:textSize="25dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/GbpRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="GBPrate"
+                    android:textSize="25dp" />
+
+                <TextView
+                    android:id="@+id/displayGBP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="0"
+                    android:textSize="25dp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

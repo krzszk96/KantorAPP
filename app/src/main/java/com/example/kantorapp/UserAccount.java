@@ -47,10 +47,10 @@ public class UserAccount extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        userBalancePLN.setText("");
-        userBalanceEUR.setText("");
-        userBalanceDOL.setText("");
-        userBalanceGBP.setText("");
+        userBalancePLN.setText("0");
+        userBalanceEUR.setText("0");
+        userBalanceDOL.setText("0");
+        userBalanceGBP.setText("0");
 
         userEmail.setText(firebaseUser.getEmail());
         userDataAccount();
