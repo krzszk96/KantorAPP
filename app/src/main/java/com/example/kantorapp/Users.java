@@ -4,13 +4,12 @@ public class Users {
 
     private String id;
     private String email, passwd;
-    private double accbalance;
+    private Balance accbalance;
 
     public Users(){
 
     }
-
-    public Users(String id, String email, String passwd, double accbalance) {
+    public Users(String id, String email, String passwd, Balance accbalance) {
         this.id = id;
         this.email = email;
         this.passwd = passwd;
@@ -26,7 +25,7 @@ public class Users {
     public String getPasswd() {
         return passwd;
     }
-    public double getAccbalance() {
+    public Balance getAccbalance() {
         return accbalance;
     }
 
@@ -39,7 +38,7 @@ public class Users {
     public void setPasswd(String passwd) {
         this.passwd = passwd;
     }
-    public void setAccbalance(double accbalance) {
+    public void setAccbalance(Balance accbalance) {
         this.accbalance = accbalance;
     }
 }

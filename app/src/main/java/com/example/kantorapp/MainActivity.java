@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             email = encodeUserEmail(inEmail.getText().toString());
             password = inPasswd.getText().toString();
             String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            double balance = 0;
+            Balance balance = new Balance(0,0,0,0);
 
             //create new record in database
             Users helperClass = new Users(id, email, password, balance);

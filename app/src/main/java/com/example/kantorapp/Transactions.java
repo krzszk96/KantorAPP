@@ -3,11 +3,6 @@ package com.example.kantorapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,78 +22,73 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserAccount extends AppCompatActivity {
+import static java.lang.Math.round;
 
-    TextView userEmail, userBalancePLN, userBalanceEUR, userBalanceDOL, userBalanceGBP;
-    TextView rateEUR, rateDOL, rateGBP;
-    EditText chargeAccInput;
-    Button chargeAccBtn;
-    Button buyNew;
+public class Transactions extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     DatabaseReference reference;
+    TextView userEmail,balancePLN, balanceEUR, balanceUSD, balanceGBP, rateEUR, rateDOL, rateGBP;
+    EditText buyEur;
+    Button buyEurBtn, sellEurBtn;
+
 
     private RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_account);
+        setContentView(R.layout.activity_transactions);
 
-        userEmail = (TextView) findViewById(R.id.loggedEmail);
-        userBalancePLN = (TextView) findViewById(R.id.balanceViewPLN);
-        userBalanceEUR = (TextView) findViewById(R.id.balanceViewEUR);
-        userBalanceDOL = (TextView) findViewById(R.id.balanceViewDOL);
-        userBalanceGBP = (TextView) findViewById(R.id.balanceViewGBP);
-        chargeAccInput = (EditText) findViewById(R.id.chargeInput);
-        chargeAccBtn = (Button) findViewById(R.id.chargeBtn);
+        userEmail = (TextView) findViewById(R.id.loggedEmailT);
 
-        rateEUR = (TextView) findViewById(R.id.displayEUR);
-        rateDOL = (TextView) findViewById(R.id.displayDOL);
-        rateGBP = (TextView) findViewById(R.id.displayGBP);
+        balancePLN = (TextView) findViewById(R.id.balanceViewPLN);
+        balanceEUR = (TextView) findViewById(R.id.balanceViewEUR);
+        balanceUSD = (TextView) findViewById(R.id.balanceViewUSD);
+        balanceGBP = (TextView) findViewById(R.id.balanceViewGBP);
 
-        buyNew = (Button) findViewById(R.id.buyScreen);
+        rateEUR = (TextView) findViewById(R.id.EURrateDisp);
+        rateDOL = (TextView) findViewById(R.id.USDrateDisp);
+        rateGBP = (TextView) findViewById(R.id.GBPrateDisp);
+
+        buyEur = (EditText) findViewById(R.id.inputEur);
+        buyEurBtn = (Button) findViewById(R.id.buyEuro);
+        sellEurBtn = (Button) findViewById(R.id.sellEuro);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
-        userBalancePLN.setText("0");
-        userBalanceEUR.setText("0");
-        userBalanceDOL.setText("0");
-        userBalanceGBP.setText("0");
-
         userEmail.setText(firebaseUser.getEmail());
-        userDataAccount();
 
-        chargeAccBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                topUpAcc();
-                chargeAccInput.setText("");
-            }
-        });
+        userDataAccount();
 
         mQueue = Volley.newRequestQueue(this);
         jsonParseEur();
         jsonParseDol();
         jsonParseGbp();
 
-        buyNew.setOnClickListener(new View.OnClickListener() {
+        buyEurBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserAccount.this, Transactions.class));
+                buyEuro();
+                buyEur.setText("");
             }
         });
-    }
+        sellEurBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellEuro();
+                buyEur.setText("");
+            }
+        });
 
+    }
     private void userDataAccount() {
 
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -112,10 +102,10 @@ public class UserAccount extends AppCompatActivity {
                 String curBalanceE = Double.toString(user.getAccbalance().getEur());
                 String curBalanceD = Double.toString(user.getAccbalance().getUsd());
                 String curBalanceG = Double.toString(user.getAccbalance().getGbp());
-                userBalancePLN.setText(curBalance);
-                userBalanceEUR.setText(curBalanceE);
-                userBalanceDOL.setText(curBalanceD);
-                userBalanceGBP.setText(curBalanceG);
+                balancePLN.setText(curBalance);
+                balanceEUR.setText(curBalanceE);
+                balanceUSD.setText(curBalanceD);
+                balanceGBP.setText(curBalanceG);
             }
 
             @Override
@@ -124,20 +114,58 @@ public class UserAccount extends AppCompatActivity {
             }
         });
     }
-    private void topUpAcc(){
+    private void buyEuro(){
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        final double UpdateAcc = Double.parseDouble(chargeAccInput.getText().toString());
+        final double euroAmount = Double.parseDouble(buyEur.getText().toString()); //how much buy
+        final double euroRate = Double.parseDouble(rateEUR.getText().toString());  //rate
 
         reference = FirebaseDatabase.getInstance().getReference("users").child(id);
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Users user = dataSnapshot.getValue(Users.class);
-                double curBalance = user.getAccbalance().getPln();
-                curBalance = curBalance + UpdateAcc;
-                reference.child("accbalance").child("pln").setValue(curBalance);
-            }
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceE = user.getAccbalance().getEur(); //get user eur amount
+                if((euroAmount * euroRate) < curBalance ){
+                    curBalance = curBalance - (euroAmount * euroRate);
+                    curBalanceE = curBalanceE + euroAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
+                }
 
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void sellEuro(){
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final double euroAmount = Double.parseDouble(buyEur.getText().toString()); //how much buy
+        final double euroRate = Double.parseDouble(rateEUR.getText().toString());  //rate
+
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users user = dataSnapshot.getValue(Users.class);
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceE = user.getAccbalance().getEur(); //get user eur amount
+                if( euroAmount <= curBalanceE ){
+                    curBalance = curBalance + (euroAmount * euroRate);
+                    curBalanceE = curBalanceE - euroAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough euro to sell", Toast.LENGTH_LONG).show();
+                }
+                //update amount
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
+
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -219,5 +247,4 @@ public class UserAccount extends AppCompatActivity {
         });
         mQueue.add(request);
     }
-
 }
