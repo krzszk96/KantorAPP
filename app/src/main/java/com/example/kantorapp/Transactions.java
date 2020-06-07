@@ -28,13 +28,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.Math.round;
 
 public class Transactions extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    DatabaseReference reference;
+    DatabaseReference reference, thistoryShow;
     TextView userEmail,balancePLN, balanceEUR, balanceUSD, balanceGBP, rateEUR, rateDOL, rateGBP;
     EditText buyEur, buyDol, buyGbp;
     Button buyEurBtn, buyDolBtn, buyGbpBtn, sellEurBtn, sellDolBtn, sellGbpBtn ;
@@ -171,7 +174,6 @@ public class Transactions extends AppCompatActivity {
 
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
-
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

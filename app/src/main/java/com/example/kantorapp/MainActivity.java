@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
@@ -83,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             password = inPasswd.getText().toString();
             String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             Balance balance = new Balance(0,0,0,0);
+//            UserTransaction tDb = new UserTransaction();
+//            tDb.transactions.add("test");
 
             //create new record in database
             Users helperClass = new Users(id, email, password, balance);
