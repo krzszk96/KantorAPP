@@ -36,8 +36,8 @@ public class Transactions extends AppCompatActivity {
     FirebaseUser firebaseUser;
     DatabaseReference reference;
     TextView userEmail,balancePLN, balanceEUR, balanceUSD, balanceGBP, rateEUR, rateDOL, rateGBP;
-    EditText buyEur;
-    Button buyEurBtn, sellEurBtn;
+    EditText buyEur, buyDol, buyGbp;
+    Button buyEurBtn, buyDolBtn, buyGbpBtn, sellEurBtn, sellDolBtn, sellGbpBtn ;
 
 
     private RequestQueue mQueue;
@@ -62,6 +62,14 @@ public class Transactions extends AppCompatActivity {
         buyEurBtn = (Button) findViewById(R.id.buyEuro);
         sellEurBtn = (Button) findViewById(R.id.sellEuro);
 
+        buyDol = (EditText) findViewById(R.id.inputUsd);
+        buyDolBtn = (Button) findViewById(R.id.buyUSD);
+        sellDolBtn = (Button) findViewById(R.id.sellUSD);
+
+        buyGbp = (EditText) findViewById(R.id.inputGbp);
+        buyGbpBtn = (Button) findViewById(R.id.buyGBP);
+        sellGbpBtn = (Button) findViewById(R.id.sellGBP);
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         userEmail.setText(firebaseUser.getEmail());
@@ -85,6 +93,34 @@ public class Transactions extends AppCompatActivity {
             public void onClick(View v) {
                 sellEuro();
                 buyEur.setText("");
+            }
+        });
+        buyDolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyDollar();
+                buyDol.setText("");
+            }
+        });
+        sellDolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellDoll();
+                buyDol.setText("");
+            }
+        });
+        buyGbpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyGbp();
+                buyGbp.setText("");
+            }
+        });
+        sellGbpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellGbp();
+                buyGbp.setText("");
             }
         });
 
@@ -143,6 +179,64 @@ public class Transactions extends AppCompatActivity {
             }
         });
     }
+    private void buyDollar(){
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final double dollAmount = Double.parseDouble(buyDol.getText().toString()); //how much buy
+        final double dollRate = Double.parseDouble(rateDOL.getText().toString());  //rate
+
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users user = dataSnapshot.getValue(Users.class);
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceD = user.getAccbalance().getUsd(); //get user eur amount
+                if((dollAmount * dollRate) < curBalance ){
+                    curBalance = curBalance - (dollAmount * dollRate);
+                    curBalanceD = curBalanceD + dollAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
+                }
+
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("usd").setValue(Math.round(curBalanceD * 100.0)/100.0); //set new value in database
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void buyGbp(){
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final double gbpAmount = Double.parseDouble(buyGbp.getText().toString()); //how much buy
+        final double gbpRate = Double.parseDouble(rateGBP.getText().toString());  //rate
+
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users user = dataSnapshot.getValue(Users.class);
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceG = user.getAccbalance().getGbp(); //get user eur amount
+                if((gbpAmount * gbpRate) < curBalance ){
+                    curBalance = curBalance - (gbpAmount * gbpRate);
+                    curBalanceG = curBalanceG + gbpAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
+                }
+
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("gbp").setValue(Math.round(curBalanceG * 100.0)/100.0); //set new value in database
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void sellEuro(){
         String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         final double euroAmount = Double.parseDouble(buyEur.getText().toString()); //how much buy
@@ -164,6 +258,64 @@ public class Transactions extends AppCompatActivity {
                 //update amount
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void sellDoll(){
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final double dollAmount = Double.parseDouble(buyDol.getText().toString()); //how much buy
+        final double dollRate = Double.parseDouble(rateDOL.getText().toString());  //rate
+
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users user = dataSnapshot.getValue(Users.class);
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceD = user.getAccbalance().getUsd(); //get user eur amount
+                if( dollAmount <= curBalanceD ){
+                    curBalance = curBalance + (dollAmount * dollRate);
+                    curBalanceD = curBalanceD - dollAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough dollars to sell", Toast.LENGTH_LONG).show();
+                }
+                //update amount
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("usd").setValue(Math.round(curBalanceD * 100.0)/100.0); //set new value in database
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void sellGbp(){
+        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final double gbpAmount = Double.parseDouble(buyGbp.getText().toString()); //how much buy
+        final double gbpRate = Double.parseDouble(rateGBP.getText().toString());  //rate
+
+        reference = FirebaseDatabase.getInstance().getReference("users").child(id);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Users user = dataSnapshot.getValue(Users.class);
+                double curBalance = user.getAccbalance().getPln();  //get user pln amount
+                double curBalanceG = user.getAccbalance().getGbp(); //get user eur amount
+                if( gbpAmount <= curBalanceG ){
+                    curBalance = curBalance + (gbpAmount * gbpRate);
+                    curBalanceG = curBalanceG - gbpAmount;
+                }else{
+                    Toast.makeText(Transactions.this, "You don't have enough pounds to sell", Toast.LENGTH_LONG).show();
+                }
+                //update amount
+                reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
+                reference.child("accbalance").child("gbp").setValue(Math.round(curBalanceG * 100.0)/100.0); //set new value in database
 
             }
             @Override

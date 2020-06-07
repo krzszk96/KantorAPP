@@ -40,7 +40,7 @@ public class UserAccount extends AppCompatActivity {
     TextView rateEUR, rateDOL, rateGBP;
     EditText chargeAccInput;
     Button chargeAccBtn;
-    Button buyNew;
+    Button buyNew, history, transactionsView;
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -66,6 +66,8 @@ public class UserAccount extends AppCompatActivity {
         rateGBP = (TextView) findViewById(R.id.displayGBP);
 
         buyNew = (Button) findViewById(R.id.buyScreen);
+        transactionsView = (Button) findViewById(R.id.transScreen);
+        history = (Button) findViewById(R.id.archScreen);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -95,6 +97,18 @@ public class UserAccount extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UserAccount.this, Transactions.class));
+            }
+        });
+        transactionsView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UserAccount.this, TransactionView.class));
+            }
+        });
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UserAccount.this, ArchiveRates.class));
             }
         });
     }
