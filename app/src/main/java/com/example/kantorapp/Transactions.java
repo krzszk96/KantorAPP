@@ -165,13 +165,16 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceE = user.getAccbalance().getEur(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if((euroAmount * euroRate) < curBalance ){
                     curBalance = curBalance - (euroAmount * euroRate);
                     curBalanceE = curBalanceE + euroAmount;
+                    String hist = "+ " + euroAmount + " EUR /rate: " + euroRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
                 }
-
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
             }
@@ -193,13 +196,16 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceD = user.getAccbalance().getUsd(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if((dollAmount * dollRate) < curBalance ){
                     curBalance = curBalance - (dollAmount * dollRate);
                     curBalanceD = curBalanceD + dollAmount;
+                    String hist = "+ " + dollAmount + " USD /rate: " + dollRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
                 }
-
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("usd").setValue(Math.round(curBalanceD * 100.0)/100.0); //set new value in database
 
@@ -222,13 +228,16 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceG = user.getAccbalance().getGbp(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if((gbpAmount * gbpRate) < curBalance ){
                     curBalance = curBalance - (gbpAmount * gbpRate);
                     curBalanceG = curBalanceG + gbpAmount;
+                    String hist = "+ " + gbpAmount + " GBP /rate: " + gbpRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough money to buy", Toast.LENGTH_LONG).show();
                 }
-
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("gbp").setValue(Math.round(curBalanceG * 100.0)/100.0); //set new value in database
 
@@ -251,13 +260,17 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceE = user.getAccbalance().getEur(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if( euroAmount <= curBalanceE ){
                     curBalance = curBalance + (euroAmount * euroRate);
                     curBalanceE = curBalanceE - euroAmount;
+                    String hist = "- " + euroAmount + " EUR /rate: " + euroRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough euro to sell", Toast.LENGTH_LONG).show();
                 }
                 //update amount
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("eur").setValue(Math.round(curBalanceE * 100.0)/100.0); //set new value in database
 
@@ -280,13 +293,17 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceD = user.getAccbalance().getUsd(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if( dollAmount <= curBalanceD ){
                     curBalance = curBalance + (dollAmount * dollRate);
                     curBalanceD = curBalanceD - dollAmount;
+                    String hist = "- " + dollAmount + " USD /rate: " + dollRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough dollars to sell", Toast.LENGTH_LONG).show();
                 }
                 //update amount
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("usd").setValue(Math.round(curBalanceD * 100.0)/100.0); //set new value in database
 
@@ -309,13 +326,17 @@ public class Transactions extends AppCompatActivity {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();  //get user pln amount
                 double curBalanceG = user.getAccbalance().getGbp(); //get user eur amount
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 if( gbpAmount <= curBalanceG ){
                     curBalance = curBalance + (gbpAmount * gbpRate);
                     curBalanceG = curBalanceG - gbpAmount;
+                    String hist = "- " + gbpAmount + " GBP /rate: " + gbpRate + " PLN"; //save new transaction to string
+                    userTr.add(hist); //add new transaction to list
                 }else{
                     Toast.makeText(Transactions.this, "You don't have enough pounds to sell", Toast.LENGTH_LONG).show();
                 }
                 //update amount
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(Math.round(curBalance * 100.0)/100.0);
                 reference.child("accbalance").child("gbp").setValue(Math.round(curBalanceG * 100.0)/100.0); //set new value in database
 

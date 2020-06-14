@@ -29,18 +29,25 @@
             android:text="loggedemail@test.com" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView2"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:textSize="30dp"
-            android:text="this is transaction view" />
-    </LinearLayout>
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/trList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:text="here will be visible all transactions"
+                android:textColor="#666666"
+                android:textSize="20dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

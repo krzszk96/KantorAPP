@@ -34,6 +34,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class UserAccount extends AppCompatActivity {
 
     TextView userEmail, userBalancePLN, userBalanceEUR, userBalanceDOL, userBalanceGBP;
@@ -148,7 +150,11 @@ public class UserAccount extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Users user = dataSnapshot.getValue(Users.class);
                 double curBalance = user.getAccbalance().getPln();
+                List<String> userTr = user.getHistTrans().getTr(); //get user transaction history
                 curBalance = curBalance + UpdateAcc;
+                String hist = "Top up : " + UpdateAcc + " PLN"; //save new transaction to string
+                userTr.add(hist); //add new transaction to list
+                reference.child("histTrans").child("tr").setValue(userTr); //update database with transaction list
                 reference.child("accbalance").child("pln").setValue(curBalance);
             }
 

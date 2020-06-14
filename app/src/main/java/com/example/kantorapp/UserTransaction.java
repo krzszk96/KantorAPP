@@ -7,11 +7,11 @@ public class UserTransaction {
 
     List<String> transactions = new ArrayList<>();
 
-    public List<String> getMovies() {
+    public List<String> getTr() {
         return transactions;
     }
 
-    public void setMovies(List<String> transactions) {
+    public void setTr(List<String> transactions) {
         this.transactions = transactions;
     }
 }

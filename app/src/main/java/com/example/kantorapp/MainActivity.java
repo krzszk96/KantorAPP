@@ -85,11 +85,14 @@ public class MainActivity extends AppCompatActivity {
             password = inPasswd.getText().toString();
             String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
             Balance balance = new Balance(0,0,0,0);
-//            UserTransaction tDb = new UserTransaction();
-//            tDb.transactions.add("test");
+
+            UserTransaction tDb = new UserTransaction(); ///this is history
+            List<String> transactionstest = new ArrayList<>();
+            transactionstest.add("Transaction history initial");
+            tDb.setTr(transactionstest);
 
             //create new record in database
-            Users helperClass = new Users(id, email, password, balance);
+            Users helperClass = new Users(id, email, password, balance, tDb);
             reference.child(id).setValue(helperClass);
 
     }

@@ -8,15 +8,17 @@ public class Users {
     private String id;
     private String email, passwd;
     private Balance accbalance;
+    private UserTransaction histTrans;
 
     public Users(){
 
     }
-    public Users(String id, String email, String passwd, Balance accbalance) {
+    public Users(String id, String email, String passwd, Balance accbalance, UserTransaction histTrans) {
         this.id = id;
         this.email = email;
         this.passwd = passwd;
         this.accbalance = accbalance;
+        this.histTrans = histTrans;
     }
 
     public String getId() {
@@ -32,6 +34,10 @@ public class Users {
         return accbalance;
     }
 
+    public UserTransaction getHistTrans() {
+        return histTrans;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -43,5 +49,9 @@ public class Users {
     }
     public void setAccbalance(Balance accbalance) {
         this.accbalance = accbalance;
+    }
+
+    public void setHistTrans(UserTransaction histTrans) {
+        this.histTrans = histTrans;
     }
 }
